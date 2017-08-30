@@ -3,8 +3,11 @@ package org.lionpooh.sample.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.converter.GenericMessageConverter;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
@@ -18,24 +21,25 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer{
+public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
 	@Bean
-	public SockJsClient sockJsClient()	{
+	public SockJsClient sockJsClient() {
 		List<Transport> transports = new ArrayList<>();
 		transports.add(new WebSocketTransport(new StandardWebSocketClient()));
 		SockJsClient sockJsClient = new SockJsClient(transports);
 		return sockJsClient;
 	}
-	
+
 	@Bean
-	public WebSocketStompClient stompClient()	{
+	public WebSocketStompClient stompClient() {
 		WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient());
 		stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-		
+		//stompClient.setMessageConverter(new GenericMessageConverter());
+		//stompClient.setMessageConverter(new );
 		return stompClient;
 	}
-	
+
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
 		config.setApplicationDestinationPrefixes("/test");
@@ -46,6 +50,5 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer{
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/influxdb_websocket").withSockJS();
 	}
-	
-}
 
+}

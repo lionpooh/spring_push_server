@@ -1,7 +1,6 @@
 package org.lionpooh.sample.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.lionpooh.sample.domain.Memory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -34,13 +33,15 @@ public class MessageController {
 	
 	@MessageMapping("/metrics/memory")
 	@SendTo("/influxdb/metrics")
-	public Map<String, Object> metric(Memory memory)	{
-		Map<String, Object> metricSet = new HashMap<>();
-		metricSet.put("memory", memory);
-		
-		log.info(metricSet.toString());
-		
-		return metricSet;
+	public List<Memory> metric(List<Memory> memory)	{
+		log.info(memory.toString());
+		return memory;
 	}
 	
+	/*@MessageMapping("/metrics")
+	@SendTo("/influxdb/metrics")
+	public String test(String name)	{
+		log.info("name: {}", name);
+		return "hello " + name;
+	}*/
 }
