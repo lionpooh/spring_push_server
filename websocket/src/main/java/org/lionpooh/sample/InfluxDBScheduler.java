@@ -17,6 +17,7 @@ import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import lombok.extern.slf4j.Slf4j;
@@ -47,11 +48,11 @@ public class InfluxDBScheduler {
 		 */
 	}
 
-	@Scheduled(initialDelay = 3000, fixedDelay = 10000)
+	@Scheduled(initialDelay = 3000, fixedDelay = 3000)
 	public void pushMetric() throws InterruptedException, ExecutionException {
 		if (this.session == null || !this.session.isConnected()) {
 			this.session = stompClient
-					.connect("ws://localhost:8080/influxdb_websocket", new StompSessionHandlerAdapter() {
+					.connect("ws://localhost:8080/influxdb_websocket", new WebSocketHttpHeaders(), new StompSessionHandlerAdapter() {
 
 						/*@Override
 						public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
