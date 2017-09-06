@@ -1,7 +1,5 @@
 package org.lionpooh.sample.domain;
 
-import java.util.Date;
-
 import org.influxdb.annotation.Column;
 import org.influxdb.annotation.Measurement;
 
@@ -9,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Measurement(name = "mem")
-public class Memory {
+public class Memory extends Metric{
 
 	@Column(name = "time")
 	private String time;

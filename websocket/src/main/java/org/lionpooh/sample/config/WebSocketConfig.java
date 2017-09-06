@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.GenericMessageConverter;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
@@ -32,7 +33,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
 	@Bean
 	public WebSocketStompClient stompClient() {
-		WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient());
+		//WebSocketStompClient stompClient = new WebSocketStompClient(sockJsClient());
+		WebSocketStompClient stompClient = new WebSocketStompClient(new StandardWebSocketClient());
 		stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 		//stompClient.setMessageConverter(new GenericMessageConverter());
 		//stompClient.setMessageConverter(new StringMessageConverter());
@@ -42,8 +44,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 	@Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
-        container.setMaxTextMessageBufferSize(30000);
-        container.setMaxBinaryMessageBufferSize(30000);
+        container.setMaxTextMessageBufferSize(1024 * 1024);
+        container.setMaxBinaryMessageBufferSize(1024 * 1024);
         return container;
     }
 	
@@ -55,7 +57,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/influxdb_websocket").withSockJS();
+		registry.addEndpoint("/influxdb_websocket");
 	}
-
+	
 }
