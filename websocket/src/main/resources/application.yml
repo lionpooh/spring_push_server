@@ -1,0 +1,8 @@
+websocket:
+  influxdb:
+    url: http://13.124.237.227:8086/
+
+lionpooh:
+  server:
+    initialDelayString: 3000
+    fixedDelayString: 3000

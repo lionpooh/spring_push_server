@@ -31,7 +31,7 @@ public class InfluxDBScheduler {
 
 	@Autowired
 	private WebSocketStompClient stompClient;
-
+	
 	private StompSession session;
 
 	private WebSocketHttpHeaders headers;

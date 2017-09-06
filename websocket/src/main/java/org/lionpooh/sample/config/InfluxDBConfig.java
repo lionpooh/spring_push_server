@@ -2,6 +2,7 @@ package org.lionpooh.sample.config;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
+import org.lionpooh.sample.properties.InfluxDBProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

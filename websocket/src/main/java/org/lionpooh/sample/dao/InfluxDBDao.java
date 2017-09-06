@@ -7,7 +7,10 @@ import org.influxdb.InfluxDB;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
 import org.influxdb.impl.InfluxDBResultMapper;
+import org.lionpooh.sample.config.InfluxDBConfig;
+import org.lionpooh.sample.domain.Memory;
 import org.lionpooh.sample.domain.Metric;
+import org.lionpooh.sample.properties.InfluxDBProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,12 +18,12 @@ import org.springframework.util.Assert;
 
 @Component
 public class InfluxDBDao implements MetricDao{
-
-	@Value("${influxdb.database}")
-	private String database;
 	
 	@Autowired
 	private InfluxDB influxdb;
+	
+	@Autowired
+	private InfluxDBProperties properties;
 	
 	/**
 	 * select metric from influxdb.
@@ -29,10 +32,11 @@ public class InfluxDBDao implements MetricDao{
 	 * @return result of select query from influxdb
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Metric> List<T> selectMetric(T metric)	{
+	public <T> List<T> selectMetric(T metric)	{
 		Assert.notNull(metric, "metric must not null");
+		Assert.isAssignable(Metric.class, metric.getClass(), "Metric Type expected...");
 		QueryResult queryResult =
-				influxdb.query(createQuery(metric));
+				influxdb.query(createQuery((Metric) metric));
 		InfluxDBResultMapper resultMapper = new InfluxDBResultMapper();
 		List<T> list = (List<T>) resultMapper.toPOJO(queryResult, Metric.class);
 		return list;
@@ -61,7 +65,8 @@ public class InfluxDBDao implements MetricDao{
 		
 		query = "select " + fields + " from " + measurements + " where time > now() - " + time;
 		System.out.println(query);
-		Query influxdbQuery = new Query(query, this.database);
+		Query influxdbQuery = new Query(query, this.properties.getDatabase());
 		return influxdbQuery;
 	}
+
 }

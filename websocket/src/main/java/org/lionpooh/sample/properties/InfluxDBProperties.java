@@ -1,4 +1,4 @@
-package org.lionpooh.sample.config;
+package org.lionpooh.sample.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
